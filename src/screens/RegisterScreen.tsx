@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Button, Snackbar, Text, TextInput } from "react-native-paper";
+import { Button, Text, TextInput } from "react-native-paper";
 import styles from "../themes/styles";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
