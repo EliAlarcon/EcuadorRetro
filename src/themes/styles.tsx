@@ -34,6 +34,20 @@ const styles = StyleSheet.create({
     iconHeader:{
         flex: 1,
         alignItems:'flex-end'
+    },
+    contentCard:{
+        marginHorizontal: 10,
+        marginTop:5
+    },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0
+    },
+    groupInput:{
+        flexDirection:'row',
+        gap:7
     }
 })
 

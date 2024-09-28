@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Button, Snackbar, Text, TextInput } from "react-native-paper";
-import { ShowMessage } from "./RegisterScreen";
 import styles from "../themes/styles";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
+import { ShowMessage, SnackbarComponent } from "./components/SnackbarComponent";
 
 interface FormLogin {
   email: string;
@@ -100,13 +100,7 @@ export const LoginScreen = () => {
       >
         No tienes una cuenta aún? Regístrate
       </Text>
-      <Snackbar
-        visible={showMessage.visible}
-        onDismiss={() => setShowMessage({ ...showMessage, visible: false })}
-        style={{ backgroundColor: showMessage.color, width: "100%" }}
-      >
-        {showMessage.message}
-      </Snackbar>
+      <SnackbarComponent showMessage={showMessage} setShowMessage={setShowMessage}/>
     </View>
   );
 };

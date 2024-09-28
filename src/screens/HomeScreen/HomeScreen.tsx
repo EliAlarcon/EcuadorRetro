@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Divider,
+  FAB,
   IconButton,
   MD3Colors,
   Modal,
@@ -13,19 +14,31 @@ import {
 } from "react-native-paper";
 import { auth } from "../../config/firebaseConfig";
 import styles from "../../themes/styles";
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
 import firebase from "@firebase/auth";
 import { updateProfile } from "firebase/auth";
+import { ContentCardComponent } from "./components/ContentCardComponent";
+import { NewContentComponent } from "./components/NewContentComponent";
 
 interface FormUser {
   name: string;
+}
+
+interface Content {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  year: number;
+  duration: string;
+  category: string;
 }
 
 export const HomeScreen = () => {
   //Hook useEffect: Para cargar la data del usuario
   useEffect(() => {
     setUserData(auth.currentUser);
-    setFormUser({ name: auth.currentUser?.displayName??"NA"});
+    setFormUser({ name: auth.currentUser?.displayName ?? "NA" });
   }, []);
 
   //Hook useState: para acceder a la data del usuario
@@ -37,7 +50,24 @@ export const HomeScreen = () => {
   });
 
   //Hook useState: manipulación de modal
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModalProfile, setShowModalProfile] = useState<boolean>(false);
+
+  //Hook useState: manipulación modal new content
+  const [showModalContent, setShowModalContent] = useState<boolean>(false);
+
+  //Hook useState: manipulacion lista de productos
+  const [content, setContent] = useState<Content[]>([
+    {
+      id: "1",
+      code: "25s",
+      name: "Camino a la Ayahuasca",
+      year: 2022,
+      description:
+        "Un joven documentalista se introduce en la Amazonía ecuatoriana para experimentar la legendaria ayahuasca.",
+      duration: "69 minutos",
+      category: "Documental",
+    },
+  ]);
 
   //Función para setear datos para su actualización
   const handlerSetValues = (key: string, value: string) => {
@@ -53,34 +83,46 @@ export const HomeScreen = () => {
     } catch (ex) {
       console.log(ex);
     }
-    setShowModal(false);
+    setShowModalProfile(false);
   };
 
   return (
     <>
-      <Card.Title
-        title="Bienvenid@"
-        titleStyle={{ fontWeight: "bold" }}
-        subtitle={userData?.displayName ?? 'NA'}
-        style={styles.rootHeader}
-        left={() => <Avatar.Icon icon="account" size={55} />}
-        right={() => (
-          <IconButton
-            icon="square-edit-outline"
-            size={30}
-            onPress={() => setShowModal(true)}
-          />
-        )}
-      />
+      <View>
+        <Card.Title
+          title="Bienvenid@"
+          titleStyle={{ fontWeight: "bold" }}
+          subtitle={userData?.displayName ?? "NA"}
+          style={styles.rootHeader}
+          left={() => <Avatar.Icon icon="account" size={55} />}
+          right={() => (
+            <IconButton
+              icon="square-edit-outline"
+              size={30}
+              onPress={() => setShowModalProfile(true)}
+            />
+          )}
+        />
+
+        <Divider />
+
+        {/* FLATLIST PRODUCTO */}
+        <FlatList
+          data={content}
+          renderItem={({ item }) => <ContentCardComponent />}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+
       <Portal>
-        <Modal visible={showModal} contentContainerStyle={styles.modalProfile}>
+        <Modal visible={showModalProfile} contentContainerStyle={styles.modalProfile}>
           <View style={styles.header}>
             <Text variant="titleLarge">Mi Perfil</Text>
             <View style={styles.iconHeader}>
               <IconButton
                 icon="close-box"
                 size={30}
-                onPress={() => setShowModal(false)}
+                onPress={() => setShowModalProfile(false)}
               />
             </View>
           </View>
@@ -108,6 +150,14 @@ export const HomeScreen = () => {
           </Button>
         </Modal>
       </Portal>
+
+      {/* FAB NUEVO CONTENIDO */}
+      <FAB
+        icon="plus"
+        style={styles.fab}
+        onPress={() => setShowModalContent(true)}
+      />
+      <NewContentComponent showModalContent={showModalContent} setShowModalContent={setShowModalContent}/>
     </>
   );
 };

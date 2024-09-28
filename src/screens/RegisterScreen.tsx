@@ -5,16 +5,11 @@ import styles from "../themes/styles";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { CommonActions, useNavigation } from "@react-navigation/native";
+import { ShowMessage, SnackbarComponent } from "./components/SnackbarComponent";
 
 interface FormRegister {
   email: string;
   password: string;
-}
-
-export interface ShowMessage {
-  visible: boolean;
-  message: string;
-  color: string;
 }
 
 export const RegisterScreen = () => {
@@ -110,13 +105,7 @@ export const RegisterScreen = () => {
       >
         Ya tienes una cuenta? Inicia Sesión
       </Text>
-      <Snackbar
-        visible={showMessage.visible}
-        onDismiss={() => setShowMessage({ ...showMessage, visible: false })}
-        style={{ backgroundColor: showMessage.color, width: "100%" }}
-      >
-        {showMessage.message}
-      </Snackbar>
+      <SnackbarComponent showMessage={showMessage} setShowMessage={setShowMessage}/>
     </View>
   );
 };
