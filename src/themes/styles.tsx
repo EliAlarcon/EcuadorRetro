@@ -19,6 +19,21 @@ const styles = StyleSheet.create({
     },
     rootHeader:{
         gap: 10,
+    },
+    modalProfile:{
+        padding: 20,
+        marginHorizontal: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        gap: 12
+    },
+    header:{
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    iconHeader:{
+        flex: 1,
+        alignItems:'flex-end'
     }
 })
 
