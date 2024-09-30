@@ -12,7 +12,7 @@ import {
 import styles from "../../../themes/styles";
 import { ShowMessage, SnackbarComponent } from "../../components/SnackbarComponent";
 import { push, ref, set } from "firebase/database";
-import { dbRealTime } from "../../../config/firebaseConfig";
+import { auth, dbRealTime } from "../../../config/firebaseConfig";
 
 interface Props {
   showModalContent: boolean;
@@ -65,7 +65,7 @@ export const NewContentComponent = ({
         return;
     }
     //1. Creamos la conexión a la base de datos
-    const dbRef = ref(dbRealTime, 'content');
+    const dbRef = ref(dbRealTime, 'content/'+ auth.currentUser?.uid);
     //2. Creamos una colección con los datos que se desea almacenar
     const saveContent = push(dbRef);
     //3. Enviamos los datos a la base de datos

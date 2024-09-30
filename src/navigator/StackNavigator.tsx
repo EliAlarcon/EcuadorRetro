@@ -7,23 +7,23 @@ import { View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { LoginScreen } from "../screens/LoginScreen";
 import { HomeScreen } from "../screens/HomeScreen/HomeScreen";
+import { DetailContentScreen } from "../screens/HomeScreen/DetailContentScreen";
 
 interface Routes {
   name: string;
   screen: () => JSX.Element;
+  headerShown?: boolean;
+  title?: string;
 }
 
 const Stack = createStackNavigator();
 
 //Array usuario autenticado
-const routeAuth: Routes[] = [
-    { name: "Home", screen: HomeScreen }
-];
-
-//Array usuario no autenticado
-const routeNoAuth: Routes[] = [
+const routes: Routes[] = [
   { name: "Login", screen: LoginScreen },
   { name: "Register", screen: RegisterScreen },
+  { name: "Home", screen: HomeScreen },
+  { name: "Detail", screen: DetailContentScreen, headerShown:true, title: 'Detalle Contenido' },
 ];
 
 export const StackNavigator = () => {
@@ -51,24 +51,18 @@ export const StackNavigator = () => {
           <ActivityIndicator animating={true} color="#5A4499" />
         </View>
       ) : (
-        <Stack.Navigator>
-          {!isAuth
-            ? routeNoAuth.map((item, index) => (
-                <Stack.Screen
-                  key={index}
-                  name={item.name}
-                  component={item.screen}
-                  options={{ headerShown: false }}
-                />
-              ))
-            : routeAuth.map((item, index) => (
-                <Stack.Screen
-                  key={index}
-                  name={item.name}
-                  component={item.screen}
-                  options={{ headerShown: true }}
-                />
-              ))}
+        <Stack.Navigator initialRouteName={isAuth ? "Home" : "Login"}>
+          {routes.map((item, index) => (
+            <Stack.Screen
+              key={index}
+              name={item.name}
+              component={item.screen}
+              options={{
+                headerShown: item.headerShown ?? false,
+                title: item.headerShown ? item.title : item.name
+              }}
+            />
+          ))}
         </Stack.Navigator>
       )}
     </>

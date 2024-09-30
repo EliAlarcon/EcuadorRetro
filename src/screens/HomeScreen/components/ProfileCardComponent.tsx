@@ -11,7 +11,9 @@ import {
 } from "react-native-paper";
 import styles from "../../../themes/styles";
 import firebase from "@firebase/auth";
-import { updateProfile } from "firebase/auth";
+import { signOut, updateProfile } from "firebase/auth";
+import { auth } from "../../../config/firebaseConfig";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 
 interface FormUser {
   name: string;
@@ -29,13 +31,15 @@ export const ProfileCardComponent = ({
   userData,
 }: Props) => {
   useEffect(() => {
-    setFormUser({ name: userData.displayName ?? "NA" });
+    setFormUser({ name: auth.currentUser?.displayName ?? "NA" });
   }, []);
 
   //Hook useState: para manipular datos usuario
   const [formUser, setFormUser] = useState<FormUser>({
     name: "",
   });
+
+  const navigate = useNavigation();
 
   //Función para setear datos para su actualización
   const handlerSetValues = (key: string, value: string) => {
@@ -52,6 +56,19 @@ export const ProfileCardComponent = ({
       console.log(ex);
     }
     setShowModalProfile(false);
+  };
+
+  //Función para cerrar sesión
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      navigate.dispatch(
+        CommonActions.reset({ index: 0, routes: [{ name: "Login" }] })
+      );
+      setShowModalProfile(false);
+    } catch (ex) {
+      console.log(ex);
+    }
   };
 
   return (
@@ -92,6 +109,11 @@ export const ProfileCardComponent = ({
         >
           Actualizar
         </Button>
+        <IconButton
+          icon="logout"
+          size={30}
+          onPress={handleSignOut}
+        />
       </Modal>
     </Portal>
   );

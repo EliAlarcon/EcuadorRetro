@@ -6,15 +6,16 @@ import {
   FAB,
   IconButton,
 } from "react-native-paper";
-import { auth } from "../../config/firebaseConfig";
+import { auth, dbRealTime } from "../../config/firebaseConfig";
 import styles from "../../themes/styles";
 import { FlatList, View } from "react-native";
 import firebase from "@firebase/auth";
 import { ContentCardComponent } from "./components/ContentCardComponent";
 import { NewContentComponent } from "./components/NewContentComponent";
 import { ProfileCardComponent } from "./components/ProfileCardComponent";
+import { onValue, ref } from "firebase/database";
 
-interface Content {
+export interface Content {
   id: string;
   code: string;
   name: string;
@@ -28,6 +29,7 @@ export const HomeScreen = () => {
   //Hook useEffect: Para cargar la data del usuario
   useEffect(() => {
     setUserData(auth.currentUser);
+    getAllProducts();
   }, []);
 
   //Hook useState: para acceder a la data del usuario
@@ -40,20 +42,32 @@ export const HomeScreen = () => {
   const [showModalContent, setShowModalContent] = useState<boolean>(false);
 
   //Hook useState: manipulacion lista de productos
-  const [content, setContent] = useState<Content[]>([
-    {
-      id: "1",
-      code: "25s",
-      name: "Camino a la Ayahuasca",
-      year: 2022,
-      description:
-        "Un joven documentalista se introduce en la Amazonía ecuatoriana para experimentar la legendaria ayahuasca.",
-      duration: "69 minutos",
-      category: "Documental",
-    },
-  ]);
+  const [content, setContent] = useState<Content[]>([]);
 
-  
+  //READ
+  const getAllProducts = () =>{
+    //1. Conexión a la base de datos
+    const dbRef = ref(dbRealTime, 'content/' + auth.currentUser?.uid);
+    //2. Obtener data
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) {
+        console.log("Sin información");
+        setContent([]);
+        return;
+      }
+      //3. Obtenemos las keys
+      const getKeys = Object.keys(data);
+      //4. Creamos la colección
+      const listContent: Content[] = [];
+      //5. Recorremos las keys
+      getKeys.forEach((key) => {
+        const value = {...data[key], id: key};
+        listContent.push(value);
+      })
+      setContent(listContent);
+    })
+  };
 
   return (
     <>
@@ -72,11 +86,11 @@ export const HomeScreen = () => {
             />
           )}
         />
-        <Divider />
+        <Divider bold/>
         {/* FLATLIST PRODUCTO */}
         <FlatList
           data={content}
-          renderItem={({ item }) => <ContentCardComponent />}
+          renderItem={({ item }) => <ContentCardComponent content={item}/>}
           keyExtractor={(item) => item.id}
         />
       </View>

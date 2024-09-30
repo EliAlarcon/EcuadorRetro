@@ -58,6 +58,7 @@ export const RegisterScreen = () => {
         message: "Registro exitoso!",
         color: "#0dad00",
       });
+      navigate.dispatch(CommonActions.navigate({name: 'Login'}))
     } catch (error) {
       setShowMessage({
         visible: true,

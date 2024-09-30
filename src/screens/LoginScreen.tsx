@@ -53,6 +53,7 @@ export const LoginScreen = () => {
         formLogin.email,
         formLogin.password
       );
+      navigation.dispatch(CommonActions.navigate({ name: "Home" }));
     } catch (error) {
       console.log(error);
       setShowMessage({
@@ -100,7 +101,10 @@ export const LoginScreen = () => {
       >
         No tienes una cuenta aún? Regístrate
       </Text>
-      <SnackbarComponent showMessage={showMessage} setShowMessage={setShowMessage}/>
+      <SnackbarComponent
+        showMessage={showMessage}
+        setShowMessage={setShowMessage}
+      />
     </View>
   );
 };

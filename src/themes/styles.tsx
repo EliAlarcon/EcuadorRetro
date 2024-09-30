@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         gap: 10,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
     text:{
         fontSize: 25,
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     },
     rootHeader:{
         gap: 10,
+        marginTop: 25,
     },
     modalProfile:{
         padding: 20,
@@ -48,6 +49,16 @@ const styles = StyleSheet.create({
     groupInput:{
         flexDirection:'row',
         gap:7
+    },
+    groupButton:{
+        gap: 10
+    },
+    rootDetail:{
+        flex: 1,
+        paddingTop: 20,
+        gap: 10,
+        paddingHorizontal: 20,
+        backgroundColor: '#fff'
     }
 })
 
